@@ -57,7 +57,7 @@ class ImageExportPluginTest extends TestCase {
 		$this->server->tree = $this->tree;
 		$this->logger = $this->getMockBuilder('\OCP\ILogger')->getMock();
 
-		$this->plugin = $this->getMock('OCA\DAV\CardDAV\ImageExportPlugin', ['getPhoto'], [$this->logger]);
+		$this->plugin = $this->createMock('OCA\DAV\CardDAV\ImageExportPlugin', ['getPhoto'], [$this->logger]);
 		$this->plugin->initialize($this->server);
 	}
 

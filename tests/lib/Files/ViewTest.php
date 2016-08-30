@@ -15,13 +15,13 @@ use OC\Files\Storage\Temporary;
 use OCP\Files\FileInfo;
 use OCP\Lock\ILockingProvider;
 
-class TemporaryNoTouch extends \OC\Files\Storage\Temporary {
+class TemporaryNoTouch extends Temporary {
 	public function touch($path, $mtime = null) {
 		return false;
 	}
 }
 
-class TemporaryNoCross extends \OC\Files\Storage\Temporary {
+class TemporaryNoCross extends Temporary {
 	public function copyFromStorage(\OCP\Files\Storage $sourceStorage, $sourceInternalPath, $targetInternalPath) {
 		return Common::copyFromStorage($sourceStorage, $sourceInternalPath, $targetInternalPath);
 	}
@@ -31,7 +31,7 @@ class TemporaryNoCross extends \OC\Files\Storage\Temporary {
 	}
 }
 
-class TemporaryNoLocal extends \OC\Files\Storage\Temporary {
+class TemporaryNoLocal extends Temporary {
 	public function instanceOfStorage($className) {
 		if ($className === '\OC\Files\Storage\Local') {
 			return false;
@@ -722,7 +722,7 @@ class ViewTest extends \Test\TestCase {
 	public function testUTF8Names() {
 		$names = array('虚', '和知しゃ和で', 'regular ascii', 'sɨˈrɪlɪk', 'ѨѬ', 'أنا أحب القراءة كثيرا');
 
-		$storage = new \OC\Files\Storage\Temporary(array());
+		$storage = new Temporary(array());
 		\OC\Files\Filesystem::mount($storage, array(), '/');
 
 		$rootView = new \OC\Files\View('');
@@ -751,7 +751,7 @@ class ViewTest extends \Test\TestCase {
 
 	public function xtestLongPath() {
 
-		$storage = new \OC\Files\Storage\Temporary(array());
+		$storage = new Temporary(array());
 		\OC\Files\Filesystem::mount($storage, array(), '/');
 
 		$rootView = new \OC\Files\View('');
@@ -1010,7 +1010,7 @@ class ViewTest extends \Test\TestCase {
 			$longPath .= '/' . $folderName;
 		}
 
-		$storage = new \OC\Files\Storage\Temporary(array());
+		$storage = new Temporary(array());
 		$this->tempStorage = $storage; // for later hard cleanup
 		\OC\Files\Filesystem::mount($storage, array(), '/');
 
@@ -1111,7 +1111,7 @@ class ViewTest extends \Test\TestCase {
 
 	private function doTestCopyRenameFail($operation) {
 		$storage1 = new Temporary(array());
-		/** @var \PHPUnit_Framework_MockObject_MockObject | \OC\Files\Storage\Temporary $storage2 */
+		/** @var \PHPUnit_Framework_MockObject_MockObject | Temporary $storage2 */
 		$storage2 = $this->getMockBuilder('\Test\Files\TemporaryNoCross')
 			->setConstructorArgs([[]])
 			->setMethods(['fopen'])
@@ -1120,7 +1120,7 @@ class ViewTest extends \Test\TestCase {
 		$storage2->expects($this->any())
 			->method('fopen')
 			->will($this->returnCallback(function ($path, $mode) use ($storage2) {
-				/** @var \PHPUnit_Framework_MockObject_MockObject | \OC\Files\Storage\Temporary $storage2 */
+				/** @var \PHPUnit_Framework_MockObject_MockObject | Temporary $storage2 */
 				$source = fopen($storage2->getSourcePath($path), $mode);
 				return \OC\Files\Stream\Quota::wrap($source, 9);
 			}));
@@ -1164,7 +1164,7 @@ class ViewTest extends \Test\TestCase {
 
 	public function testDeleteFailKeepCache() {
 		/**
-		 * @var \PHPUnit_Framework_MockObject_MockObject | \OC\Files\Storage\Temporary $storage
+		 * @var \PHPUnit_Framework_MockObject_MockObject | Temporary $storage
 		 */
 		$storage = $this->getMockBuilder('\OC\Files\Storage\Temporary')
 			->setConstructorArgs(array(array()))
@@ -1533,14 +1533,13 @@ class ViewTest extends \Test\TestCase {
 				->setMethods([])
 				->getMock();
 
-			$mounts[] = $this->getMock(
-				'\Test\TestMoveableMountPoint',
-				['moveMount'],
-				[$storage, $mountPoint]
-			);
+			$mounts[] = $this->getMockBuilder('\Test\TestMoveableMountPoint')
+				->setMethods(['moveMount'])
+				->setConstructorArgs([$storage, $mountPoint])
+				->getMock();
 		}
 
-		$mountProvider = $this->getMock('\OCP\Files\Config\IMountProvider');
+		$mountProvider = $this->createMock('\OCP\Files\Config\IMountProvider');
 		$mountProvider->expects($this->any())
 			->method('getMountsForUser')
 			->will($this->returnValue($mounts));

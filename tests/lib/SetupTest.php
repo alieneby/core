@@ -30,13 +30,13 @@ class SetupTest extends \Test\TestCase {
 	protected function setUp() {
 		parent::setUp();
 
-		$this->config = $this->getMock('\OCP\IConfig');
-		$this->iniWrapper = $this->getMock('\bantu\IniGetWrapper\IniGetWrapper');
-		$this->l10n = $this->getMock('\OCP\IL10N');
-		$this->defaults = $this->getMock('\OC_Defaults');
-		$this->logger = $this->getMock('\OCP\ILogger');
-		$this->random = $this->getMock('\OCP\Security\ISecureRandom');
-		$this->setupClass = $this->getMock('\OC\Setup',
+		$this->config = $this->createMock('\OCP\IConfig');
+		$this->iniWrapper = $this->createMock('\bantu\IniGetWrapper\IniGetWrapper');
+		$this->l10n = $this->createMock('\OCP\IL10N');
+		$this->defaults = $this->createMock('\OC_Defaults');
+		$this->logger = $this->createMock('\OCP\ILogger');
+		$this->random = $this->createMock('\OCP\Security\ISecureRandom');
+		$this->setupClass = $this->createMock('\OC\Setup',
 			['class_exists', 'is_callable', 'getAvailableDbDriversForPdo'],
 			[$this->config, $this->iniWrapper, $this->l10n, $this->defaults, $this->logger, $this->random]);
 	}

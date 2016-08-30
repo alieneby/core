@@ -41,8 +41,8 @@ class FakeLockerPluginTest extends TestCase {
 	}
 
 	public function testInitialize() {
-		/** @var \Sabre\DAV\Server $server */
-		$server = $this->getMock('\Sabre\DAV\Server');
+		/** @var \Sabre\DAV\Server | \PHPUnit_Framework_MockObject_MockObject $server */
+		$server = $this->createMock('\Sabre\DAV\Server');
 		$server
 			->expects($this->at(0))
 			->method('on')
@@ -82,7 +82,7 @@ class FakeLockerPluginTest extends TestCase {
 		$propFind = $this->getMockBuilder('\Sabre\DAV\PropFind')
 			->disableOriginalConstructor()
 			->getMock();
-		$node = $this->getMock('\Sabre\DAV\INode');
+		$node = $this->createMock('\Sabre\DAV\INode');
 
 		$propFind->expects($this->at(0))
 			->method('handle')
@@ -137,15 +137,15 @@ class FakeLockerPluginTest extends TestCase {
 	 * @param array $expected
 	 */
 	public function testValidateTokens(array $input, array $expected) {
-		$request = $this->getMock('\Sabre\HTTP\RequestInterface');
+		$request = $this->createMock('\Sabre\HTTP\RequestInterface');
 		$this->fakeLockerPlugin->validateTokens($request, $input);
 		$this->assertSame($expected, $input);
 	}
 
 	public function testFakeLockProvider() {
-		$request = $this->getMock('\Sabre\HTTP\RequestInterface');
+		$request = $this->createMock('\Sabre\HTTP\RequestInterface');
 		$response = new Response();
-		$server = $this->getMock('\Sabre\DAV\Server');
+		$server = $this->createMock('\Sabre\DAV\Server');
 		$this->fakeLockerPlugin->initialize($server);
 
 		$request->expects($this->exactly(2))
@@ -160,8 +160,8 @@ class FakeLockerPluginTest extends TestCase {
 	}
 
 	public function testFakeUnlockProvider() {
-		$request = $this->getMock('\Sabre\HTTP\RequestInterface');
-		$response = $this->getMock('\Sabre\HTTP\ResponseInterface');
+		$request = $this->createMock('\Sabre\HTTP\RequestInterface');
+		$response = $this->createMock('\Sabre\HTTP\ResponseInterface');
 
 		$response->expects($this->once())
 				->method('setStatus')

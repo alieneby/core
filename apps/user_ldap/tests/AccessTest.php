@@ -46,19 +46,19 @@ class AccessTest extends \Test\TestCase {
 			$accMethods = get_class_methods('\OCA\User_LDAP\Access');
 			$umMethods  = get_class_methods('\OCA\User_LDAP\User\Manager');
 		}
-		$lw  = $this->getMock('\OCA\User_LDAP\ILDAPWrapper');
-		$connector = $this->getMock('\OCA\User_LDAP\Connection',
+		$lw  = $this->createMock('\OCA\User_LDAP\ILDAPWrapper');
+		$connector = $this->createMock('\OCA\User_LDAP\Connection',
 									$conMethods,
 									array($lw, null, null));
-		$um = $this->getMock('\OCA\User_LDAP\User\Manager',
+		$um = $this->createMock('\OCA\User_LDAP\User\Manager',
 			$umMethods, array(
-				$this->getMock('\OCP\IConfig'),
-				$this->getMock('\OCA\User_LDAP\FilesystemHelper'),
-				$this->getMock('\OCA\User_LDAP\LogWrapper'),
-				$this->getMock('\OCP\IAvatarManager'),
-				$this->getMock('\OCP\Image'),
-				$this->getMock('\OCP\IDBConnection'),
-				$this->getMock('\OCP\IUserManager')));
+				$this->createMock('\OCP\IConfig'),
+				$this->createMock('\OCA\User_LDAP\FilesystemHelper'),
+				$this->createMock('\OCA\User_LDAP\LogWrapper'),
+				$this->createMock('\OCP\IAvatarManager'),
+				$this->createMock('\OCP\Image'),
+				$this->createMock('\OCP\IDBConnection'),
+				$this->createMock('\OCP\IUserManager')));
 
 		return array($lw, $connector, $um);
 	}

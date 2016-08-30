@@ -28,8 +28,13 @@ namespace OCA\DAV\Tests\unit\Connector\Sabre;
 
 use OC\Files\FileInfo;
 use OC\Files\Storage\Temporary;
+use Test\TestCase;
 
 class TestDoubleFileView extends \OC\Files\View {
+
+	private $updatables;
+	private $deletables;
+	private $canRename;
 
 	public function __construct($updatables, $deletables, $canRename = true) {
 		$this->updatables = $updatables;
@@ -65,7 +70,7 @@ class TestDoubleFileView extends \OC\Files\View {
  *
  * @package OCA\DAV\Tests\Unit\Connector\Sabre
  */
-class ObjectTreeTest extends \Test\TestCase {
+class ObjectTreeTest extends TestCase {
 
 	/**
 	 * @dataProvider moveFailedProvider
@@ -127,7 +132,7 @@ class ObjectTreeTest extends \Test\TestCase {
 		$info = new FileInfo('', null, null, array(), null);
 
 		$rootDir = new \OCA\DAV\Connector\Sabre\Directory($view, $info);
-		$objectTree = $this->getMock('\OCA\DAV\Connector\Sabre\ObjectTree',
+		$objectTree = $this->createMock('\OCA\DAV\Connector\Sabre\ObjectTree',
 			array('nodeExists', 'getNodeForPath'),
 			array($rootDir, $view));
 
@@ -157,7 +162,7 @@ class ObjectTreeTest extends \Test\TestCase {
 	 * @dataProvider copyDataProvider
 	 */
 	public function testCopy($sourcePath, $targetPath, $targetParent) {
-		$view = $this->getMock('\OC\Files\View');
+		$view = $this->createMock('\OC\Files\View');
 		$view->expects($this->once())
 			->method('verifyPath')
 			->with($targetParent)
@@ -174,7 +179,7 @@ class ObjectTreeTest extends \Test\TestCase {
 		$info = new FileInfo('', null, null, array(), null);
 
 		$rootDir = new \OCA\DAV\Connector\Sabre\Directory($view, $info);
-		$objectTree = $this->getMock('\OCA\DAV\Connector\Sabre\ObjectTree',
+		$objectTree = $this->createMock('\OCA\DAV\Connector\Sabre\ObjectTree',
 			array('nodeExists', 'getNodeForPath'),
 			array($rootDir, $view));
 
@@ -194,7 +199,7 @@ class ObjectTreeTest extends \Test\TestCase {
 	 * @expectedException \Sabre\DAV\Exception\Forbidden
 	 */
 	public function testCopyFailNotCreatable($sourcePath, $targetPath, $targetParent) {
-		$view = $this->getMock('\OC\Files\View');
+		$view = $this->createMock('\OC\Files\View');
 		$view->expects($this->once())
 			->method('verifyPath')
 			->with($targetParent)
@@ -209,7 +214,7 @@ class ObjectTreeTest extends \Test\TestCase {
 		$info = new FileInfo('', null, null, array(), null);
 
 		$rootDir = new \OCA\DAV\Connector\Sabre\Directory($view, $info);
-		$objectTree = $this->getMock('\OCA\DAV\Connector\Sabre\ObjectTree',
+		$objectTree = $this->createMock('\OCA\DAV\Connector\Sabre\ObjectTree',
 			array('nodeExists', 'getNodeForPath'),
 			array($rootDir, $view));
 
@@ -242,9 +247,9 @@ class ObjectTreeTest extends \Test\TestCase {
 		$rootNode = $this->getMockBuilder('\OCA\DAV\Connector\Sabre\Directory')
 			->disableOriginalConstructor()
 			->getMock();
-		$mountManager = $this->getMock('\OC\Files\Mount\Manager');
-		$view = $this->getMock('\OC\Files\View');
-		$fileInfo = $this->getMock('\OCP\Files\FileInfo');
+		$mountManager = $this->createMock('\OC\Files\Mount\Manager');
+		$view = $this->createMock('\OC\Files\View');
+		$fileInfo = $this->createMock('\OCP\Files\FileInfo');
 		$fileInfo->expects($this->once())
 			->method('getType')
 			->will($this->returnValue($type));
@@ -352,7 +357,7 @@ class ObjectTreeTest extends \Test\TestCase {
 
 		$storage = new Temporary([]);
 
-		$view = $this->getMock('\OC\Files\View', ['resolvePath']);
+		$view = $this->createMock('\OC\Files\View', ['resolvePath']);
 		$view->expects($this->once())
 			->method('resolvePath')
 			->will($this->returnCallback(function($path) use ($storage){
@@ -362,7 +367,7 @@ class ObjectTreeTest extends \Test\TestCase {
 		$rootNode = $this->getMockBuilder('\OCA\DAV\Connector\Sabre\Directory')
 			->disableOriginalConstructor()
 			->getMock();
-		$mountManager = $this->getMock('\OC\Files\Mount\Manager');
+		$mountManager = $this->createMock('\OC\Files\Mount\Manager');
 
 		$tree = new \OCA\DAV\Connector\Sabre\ObjectTree();
 		$tree->init($rootNode, $view, $mountManager);
@@ -376,7 +381,7 @@ class ObjectTreeTest extends \Test\TestCase {
 
 		$storage = new Temporary([]);
 
-		$view = $this->getMock('\OC\Files\View', ['resolvePath']);
+		$view = $this->createMock('\OC\Files\View', ['resolvePath']);
 		$view->expects($this->any())
 			->method('resolvePath')
 			->will($this->returnCallback(function ($path) use ($storage) {
@@ -386,7 +391,7 @@ class ObjectTreeTest extends \Test\TestCase {
 		$rootNode = $this->getMockBuilder('\OCA\DAV\Connector\Sabre\Directory')
 			->disableOriginalConstructor()
 			->getMock();
-		$mountManager = $this->getMock('\OC\Files\Mount\Manager');
+		$mountManager = $this->createMock('\OC\Files\Mount\Manager');
 
 		$tree = new \OCA\DAV\Connector\Sabre\ObjectTree();
 		$tree->init($rootNode, $view, $mountManager);
@@ -409,7 +414,7 @@ class ObjectTreeTest extends \Test\TestCase {
 		$info = new FileInfo('', null, null, array(), null);
 
 		$rootDir = new \OCA\DAV\Connector\Sabre\Directory($view, $info);
-		$objectTree = $this->getMock('\OCA\DAV\Connector\Sabre\ObjectTree',
+		$objectTree = $this->createMock('\OCA\DAV\Connector\Sabre\ObjectTree',
 			array('nodeExists', 'getNodeForPath'),
 			array($rootDir, $view));
 
